@@ -1,4 +1,4 @@
-Achilles_BBL
+Achilles BBL
 ============
 
-Achilles Twitter Like Demo for Brown Bag Lunch
+Twitter Like Demo with Achilles for Brown Bag Lunch
