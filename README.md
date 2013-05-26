@@ -1,19 +1,18 @@
 # Achilles BBL
 
 
-Twitter Like Demo with Achilles for Brown Bag Lunch
+Démo Twitter-like avec Achilles pour le Brown Bag Lunch
 
-## Running the back-end
+## Lancer l'application en back-end
 
-### Prerequisites
+### Pré-requis
 
-To be able to run the back-end, you need to download and install the Cassandra server version 1.2. It can be downloaded **[here]**
+Pour lancer l'application en back-end, vous devez télécharger et installler Cassandra server version 1.2 **[ici]**
 
+### Création du keyspace
 
-### Keyspace creation
-
-* Connect to the server using the **cassandra-cli** client
-* Create the **achilles** keyspace with the following command: 
+* Se connecter à Cassandra avec le client **cassandra-cli**
+* Créer le keyspace **achilles** avec la commande suivante : 
  
  `CREATE KEYSPACE achilles`
  
@@ -22,23 +21,36 @@ To be able to run the back-end, you need to download and install the Cassandra s
  `AND strategy_options = {replication_factor:1};`
 
 
-### Running the demo
+### Lancer la démo
 
-* Checkout the source code of the demo with `git clone https://github.com/doanduyhai/Achilles_BBL.git`
-* Go to the demo folder and run it with `mvn jetty:run`
+* Récupérez le code source avec `git clone https://github.com/doanduyhai/Achilles_BBL.git`
+* Allez dans le répertoire `Achilles_BBL` puis exécutez: `mvn jetty:run`
 
+### Lancer le client de test
+
+ Pour pouvoir interroger l'application back-end, il faut un client REST. Vous pouvez installer l'extension **[Postman REST Client]** pour le navigateur Chrome.
+ 
+ Ensuite, il faut charger les scénarios pré-enregistrés. Ces scénarios se trouvent dans le répertoire `Postman_Client_Script` du projet.
+ 
+ * Achilles_BBL_Scenario1.json
+ * Achilles_BBL_Scenario2.json
+ * Achilles_BBL_Scenario3.json
+
+Il faut importer les 3 scripts ci-dessus pour tester les 3 scénarios ( _Collections/Import collections_ ).
+ 
+De plus, vous aurez besoin d'importer les paramètres d'environnement ( _Manage environments/Import_ ) depuis le fichier `AchillesDemo-environment.json`
 
 ## Hands-on
 
-### Step1: managing users
+### Scénario1: gérer les utilisateurs et les suiveurs
 
- First checkout the initial code with `git checkout Step1`
+ Tout d'abord, récupérer le code source pour ce scénario avec `git checkout Scenario1`
 
- The objectives of this steps is to be able to implement the "Follow" feature of Tweeter.
+ L'objectif de ce scénario est d'implémenter la fonctionnalité "Suivre" de Twitter
  
- Below are the specs:
+ Pour cela:
  
- 1. Create **User** entity with the following fields:
+ 1. Créer une entité **User** avec les champs suivants:
      * userId (primary key)
      * firstname
      * lastname
@@ -47,31 +59,46 @@ To be able to run the back-end, you need to download and install the Cassandra s
      * friends counter (TODO)
      * followers counter (TODO)
  
- 2. Implement the **UserService** to 
-     * Create an user 
-     * Add a friend to an user
-     * Remove a friend from an user
-     * Get user information
-     * List all user friends
-     * List all user followers
+ 2. Implémenter le **UserService** pour pouvoir:
+     * Créer un utilisateur
+     * Ajouter un ami à un utilisateur
+     * Retirer un ami à un utilisateur
+     * Donner les détails sur un utilisateur
+     * Lister tous les amis d'un utlisateur
+     * Lister tous les suiveurs d'un utlisateur
 
-### Step2: creating tweets
+### Scénario2: créer des tweets
 
- Checkout the code with `git checkout Step2`
+ Récupérer le code avec `git checkout Scenario2`
 
- In this step, we want to implement the main "Send tweet" feature. When an user posts a tweet, this tweet should be visible:
+ Dans ce scénario, on cherche à implémenter la fonctionnalité "Envoyer un tweet".
+ Quand un utlisateur envoie un tweet, celui-ci doit être visible dans:
  
- * In his own list of tweet ( **userline** )
- * In his timeline 
- * In the timeline of all his followers
+ * sa propre liste de tweets ( **userline** )
+ * sa timeline
+ * la timeline de tous ses suiveurs
 
- 1. Modify **User** entity to add:
-     * a list of all his tweets  ( **userline** )
-     * a list of tweets for his timeline
-     * a counter for his own tweets ( **tweetsCount** )
- 2. Implement the **TweetService** to 
-     * allow an user to post a tweet and spread the tweet to all his followers
-
+ Pour ce faire, il faut:
  
+ 1. Modifier l'entité **User** pour ajouter:
+     * une liste de tous les tweets  ( **userline** )
+     * une liste de tous les tweets dans sa timeline
+     * un compteur pour ses propres tweets ( **tweetsCount** )
+ 
+ 2. Implémenter le **TweetService** pour
+     * envoyer un tweet et le disperser dans la timeline de tous les suiveurs
 
-[here]: http://cassandra.apache.org/download/
+### Scénario3: supprimer un tweet
+
+ Récupérer le code avec `git checkout Scenario3`
+ 
+ Dans ce scénario, il faut gérer la suppression d'un tweet. Il faut pouvoir supprimer le tweet dans:
+ * l'userline du créateur
+ * la timeline du créateur
+ * la timeline de chaque suiveur du créateur
+
+Pour cela, il faut modifier l'entité **TweetIndex** pour retenir les utilisateurs chez qui le tweet a été dispatché
+
+
+[ici]: http://cassandra.apache.org/download/
+[Postman REST Client]: https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm
